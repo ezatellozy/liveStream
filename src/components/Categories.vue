@@ -1,5 +1,6 @@
 <template>
   <div class="home" style="padding-top: 50px">
+    <loading v-if="loading" />
     <div class="category">
       <h3 @click="fetchCategories">Select category:</h3>
       <select @change="change($event)" v-model="selected">
@@ -17,9 +18,11 @@
 </template>
 
 <script>
+import Loading from "./Loading.vue";
 // @ is an alias to /src
 
 export default {
+  components: { Loading },
   name: "Home",
 
   mounted() {
@@ -29,10 +32,12 @@ export default {
     return {
       categories: [],
       selected: 1,
+      loading: false,
     };
   },
   methods: {
     fetchCategories() {
+      this.loading = true;
       fetch(
         `http://magic-tv.live:2095/player_api.php?username=${this.username}&password=${this.password}&action=get_live_categories`
       )
@@ -40,7 +45,11 @@ export default {
           return res.json();
         })
         .then((data) => {
+          this.loading = false;
           this.categories = data;
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
     change(event) {

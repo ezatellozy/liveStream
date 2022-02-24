@@ -1,5 +1,6 @@
 <template>
   <section>
+    <loading v-if="loading" />
     <div class="container">
       <div>
         <div class="streams" v-for="stream in streams" :key="stream.num">
@@ -22,14 +23,18 @@
 </template>
 
 <script>
+import Loading from "./Loading.vue";
 export default {
+  components: { Loading },
   data() {
     return {
       streams: [],
+      loading: false,
     };
   },
   methods: {
     fetchStreams() {
+      this.loading = true;
       fetch(
         `http://magic-tv.live:2095/player_api.php?username=${this.username}&password=${this.password}&action=get_live_streams&category_id=${this.$route.params.id}`
       )
@@ -37,7 +42,11 @@ export default {
           return res.json();
         })
         .then((data) => {
+          this.loading = false;
           this.streams = data;
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
   },
