@@ -2,7 +2,6 @@
   <section>
     <loading v-if="loading" />
     <div class="container">
-      <h3>Category :</h3>
       <div>
         <div class="streams" v-for="stream in streams" :key="stream.num">
           <div class="img-container">
@@ -37,9 +36,6 @@ export default {
   methods: {
     fetchStreams() {
       this.loading = true;
-      // .then((res) => {
-      //   return res.json();
-      // })
       this.axios
         .get(
           `/player_api.php?username=${this.username}&password=${this.password}&action=get_live_streams&category_id=${this.$route.params.id}`

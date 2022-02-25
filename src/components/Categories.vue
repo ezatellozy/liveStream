@@ -27,7 +27,6 @@ export default {
 
   mounted() {
     this.fetchCategories();
-    console.log(this.$store.state.categoryId);
   },
   data() {
     return {
