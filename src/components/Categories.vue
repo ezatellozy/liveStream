@@ -27,6 +27,7 @@ export default {
 
   mounted() {
     this.fetchCategories();
+    console.log(this.$store.state.categoryId);
   },
   data() {
     return {
@@ -35,27 +36,28 @@ export default {
       loading: false,
     };
   },
+
   methods: {
     fetchCategories() {
       this.loading = true;
-      fetch(
-        `http://magic-tv.live:2095/player_api.php?username=${this.username}&password=${this.password}&action=get_live_categories`
-      )
-        .then((res) => {
-          return res.json();
-        })
+      this.axios
+        .get(
+          `/player_api.php?username=${this.username}&password=${this.password}&action=get_live_categories`
+        )
         .then((data) => {
+          this.categories = [];
           this.loading = false;
-          this.categories = data;
+          this.categories = data.data;
         })
         .catch((err) => {
           console.log(err);
         });
     },
     change(event) {
-      this.$router.push({
-        path: `/live/${event.target.value}`,
-      });
+      if (this.$router.path != `/live/${event.target.value}`)
+        this.$router.push({
+          path: `/live/${event.target.value}`,
+        });
     },
   },
   computed: {

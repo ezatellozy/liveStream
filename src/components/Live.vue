@@ -2,6 +2,7 @@
   <section>
     <loading v-if="loading" />
     <div class="container">
+      <h3>Category :</h3>
       <div>
         <div class="streams" v-for="stream in streams" :key="stream.num">
           <div class="img-container">
@@ -26,6 +27,7 @@
 import Loading from "./Loading.vue";
 export default {
   components: { Loading },
+
   data() {
     return {
       streams: [],
@@ -35,15 +37,17 @@ export default {
   methods: {
     fetchStreams() {
       this.loading = true;
-      fetch(
-        `http://magic-tv.live:2095/player_api.php?username=${this.username}&password=${this.password}&action=get_live_streams&category_id=${this.$route.params.id}`
-      )
-        .then((res) => {
-          return res.json();
-        })
+      // .then((res) => {
+      //   return res.json();
+      // })
+      this.axios
+        .get(
+          `/player_api.php?username=${this.username}&password=${this.password}&action=get_live_streams&category_id=${this.$route.params.id}`
+        )
         .then((data) => {
+          this.streams = [];
           this.loading = false;
-          this.streams = data;
+          this.streams = data.data;
         })
         .catch((err) => {
           console.log(err);
